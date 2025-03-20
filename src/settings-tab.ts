@@ -63,30 +63,7 @@ export class AiTaggerSettingTab extends PluginSettingTab {
                     });
             });
 
-        // Add custom system prompt toggle
-        new Setting(containerElement)
-            .setName('Use Custom System Prompt')
-            .setDesc('Enable to use a custom system prompt instead of the default one')
-            .addToggle((toggle: ToggleComponent) => {
-                toggle.setValue(this.plugin.settings.useCustomSystemPrompt || false)
-                    .onChange(async (value: boolean) => {
-                        this.plugin.settings.useCustomSystemPrompt = value;
-                        await this.plugin.saveSettings();
-                    });
-            });
 
-        // Add custom system prompt textarea
-        new Setting(containerElement)
-            .setName('Custom System Prompt')
-            .setDesc('Enter your custom system prompt for the AI model')
-            .addTextArea((text: TextAreaComponent) => {
-                text.inputEl.style.height = '200px';
-                text.setValue(this.plugin.settings.customSystemPrompt || '')
-                    .onChange(async (value: string) => {
-                        this.plugin.settings.customSystemPrompt = value;
-                        await this.plugin.saveSettings();
-                    });
-            });
 
         new Setting(containerElement)
             .setName('Model')

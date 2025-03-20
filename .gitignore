@@ -22,3 +22,6 @@ data.json
 .DS_Store
 
 .env
+
+# Plugin output folder
+ai-allowed-tagger/

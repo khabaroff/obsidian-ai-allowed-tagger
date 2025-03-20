@@ -10,7 +10,6 @@ export interface AiTaggerSettings {
 	customBaseUrl: string;
 	lowerCaseMode: boolean;
 	allowedTags: string[];
-	useCustomSystemPrompt: boolean;
-	customSystemPrompt: string;
+
 	[key: `${string}ApiKey`]: string;
 }

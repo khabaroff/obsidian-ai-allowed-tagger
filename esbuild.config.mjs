@@ -37,7 +37,7 @@ const context = await esbuild.context({
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
-	outfile: "/Users/khabaroff/DEV/ai-allowed-tagger/main.js",
+	outfile: "main.js",
 });
 
 if (prod) {

@@ -26,7 +26,7 @@ export const MODEL_CONFIGS: ModelConfig[] = [
     {
         company: "OPENAI",
         provider: "openai",
-        modelName: "GPT-4o mini",
+        modelName: "GPT-4o Mini",
         modelId: "gpt-4o-mini",
         tokenLimit: 128000,
         type: "CLOSED_SOURCE",
@@ -35,9 +35,27 @@ export const MODEL_CONFIGS: ModelConfig[] = [
     {
         company: "OPENAI",
         provider: "openai",
-        modelName: "GPT-4o",
-        modelId: "gpt-4o",
+        modelName: "GPT-4",
+        modelId: "gpt-4",
         tokenLimit: 128000,
+        type: "CLOSED_SOURCE",
+        toolUse: true
+    },
+    {
+        company: "OPENAI",
+        provider: "openai",
+        modelName: "GPT-4 Turbo",
+        modelId: "gpt-4-turbo-preview",
+        tokenLimit: 128000,
+        type: "CLOSED_SOURCE",
+        toolUse: true
+    },
+    {
+        company: "OPENAI",
+        provider: "openai",
+        modelName: "GPT-3.5 Turbo",
+        modelId: "gpt-3.5-turbo",
+        tokenLimit: 16385,
         type: "CLOSED_SOURCE",
         toolUse: true
     },

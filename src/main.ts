@@ -144,7 +144,7 @@ export default class AiTagger extends Plugin {
 		}
 
 		// This creates an icon in the left ribbon.
-		this.addRibbonIcon('wand-2', 'Generate tags!', async () => {
+		this.addRibbonIcon('wand-2', 'AI Generate Tags!', async () => {
 			// Called when the user clicks the icon.
 
 			try {
