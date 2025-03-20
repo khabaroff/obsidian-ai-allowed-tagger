@@ -1,6 +1,3 @@
-// my settings definition
-// this tells me what settings I want the user to be able to configure
-// while the plugin is enabled you can access these settings from the settings member variable
 export interface AiTaggerSettings {
 	openaiApiKey: string;
 	mistralaiApiKey: string;
@@ -12,5 +9,8 @@ export interface AiTaggerSettings {
 	useCustomBaseUrl: boolean;
 	customBaseUrl: string;
 	lowerCaseMode: boolean;
+	allowedTags: string[];
+	useCustomSystemPrompt: boolean;
+	customSystemPrompt: string;
 	[key: `${string}ApiKey`]: string;
 }

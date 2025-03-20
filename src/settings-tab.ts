@@ -1,5 +1,5 @@
 import AiTagger from "./main";
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, PluginSettingTab, Setting, TextAreaComponent, ToggleComponent, DropdownComponent, TextComponent } from 'obsidian';
 import { MODEL_CONFIGS, COMPANIES } from './model-config';
 
 export class AiTaggerSettingTab extends PluginSettingTab {
@@ -46,6 +46,47 @@ export class AiTaggerSettingTab extends PluginSettingTab {
                 `${COMPANIES[model.company]} ${model.modelName}`
             ])
         );
+
+        // Add allowed tags setting
+        new Setting(containerElement)
+            .setName('Allowed Tags')
+            .setDesc('Enter tags that are allowed to be used (one per line, include # prefix)')
+            .addTextArea((text: TextAreaComponent) => {
+                text.inputEl.style.height = '150px';
+                text.setValue(this.plugin.settings.allowedTags?.join('\n') || '')
+                    .onChange(async (value: string) => {
+                        const tags = value.split('\n')
+                            .map((tag: string) => tag.trim())
+                            .filter((tag: string) => tag.length > 0);
+                        this.plugin.settings.allowedTags = tags;
+                        await this.plugin.saveSettings();
+                    });
+            });
+
+        // Add custom system prompt toggle
+        new Setting(containerElement)
+            .setName('Use Custom System Prompt')
+            .setDesc('Enable to use a custom system prompt instead of the default one')
+            .addToggle((toggle: ToggleComponent) => {
+                toggle.setValue(this.plugin.settings.useCustomSystemPrompt || false)
+                    .onChange(async (value: boolean) => {
+                        this.plugin.settings.useCustomSystemPrompt = value;
+                        await this.plugin.saveSettings();
+                    });
+            });
+
+        // Add custom system prompt textarea
+        new Setting(containerElement)
+            .setName('Custom System Prompt')
+            .setDesc('Enter your custom system prompt for the AI model')
+            .addTextArea((text: TextAreaComponent) => {
+                text.inputEl.style.height = '200px';
+                text.setValue(this.plugin.settings.customSystemPrompt || '')
+                    .onChange(async (value: string) => {
+                        this.plugin.settings.customSystemPrompt = value;
+                        await this.plugin.saveSettings();
+                    });
+            });
 
         new Setting(containerElement)
             .setName('Model')

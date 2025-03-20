@@ -1,10 +1,9 @@
 {
-	"id": "ai-tagger",
-	"name": "AI Tagger",
-	"version": "1.2.6",
+	"id": "ai-allowed-tagger",
+	"name": "AI Allowed Tagger",
+	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Analyze and tag your document with one click for efficient note organization using AI.",
-	"author": "Luca Grippa",
-	"authorUrl": "https://lucagrippa.io",
+	"description": "Tag your documents using AI with a predefined list of allowed tags",
+	"author": "Sergey Khabaroff",
 	"isDesktopOnly": false
 }

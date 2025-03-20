@@ -1,4 +1,5 @@
-import { Notice, Plugin } from 'obsidian';
+import { Notice } from 'obsidian';
+import AiTagger from './main';
 import { join } from 'path';
 import { z } from "zod";
 
@@ -7,6 +8,7 @@ import { ModelService } from './model-service';
 import { getTagsString } from './utils';
 import { examples } from './prompts/examples';
 import { systemMessage } from './prompts/system-prompt';
+import { customSystemMessage } from './prompts/custom-system-prompt';
 
 import { Runnable } from '@langchain/core/runnables';
 import { JsonOutputParser } from "@langchain/core/output_parsers";
@@ -21,20 +23,19 @@ import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { CallbackHandler } from "langfuse-langchain";
 
 const tagger = z.object({
-    tags: z.array(z.string()).describe("An array of existing tags in the form \"#<existing_catgeory>\" that best categorizes the document."),
-    newTags: z.array(z.string()).describe("An array of new tags in the form \"#<new_catgeory>\" that best categorizes the document."),
+    tags: z.array(z.string()).describe("An array of tags from the allowed tags list in the form \"#<category>\" that best categorizes the document.")
 });
 
 export class LLM {
     modelId: string;
     apiKey: string;
-    plugin: Plugin;
+    plugin: AiTagger;
     baseUrl: string | null;
     modelConfig: ModelConfig;
     prompt: ChatPromptTemplate;
     model: Runnable;
 
-    constructor(modelId: string, apiKey: string, plugin: Plugin, baseURL: string | null = null) {
+    constructor(modelId: string, apiKey: string, plugin: AiTagger, baseURL: string | null = null) {
         this.modelId = modelId;
         this.apiKey = apiKey;
         this.plugin = plugin;
@@ -42,7 +43,7 @@ export class LLM {
         this.modelConfig = ModelService.getModelById(modelId);
     }
 
-    static async initialize(modelId: string, apiKey: string, plugin: Plugin, baseUrl: string | null = null): Promise<LLM> {
+    static async initialize(modelId: string, apiKey: string, plugin: AiTagger, baseUrl: string | null = null): Promise<LLM> {
         const instance = new LLM(modelId, apiKey, plugin, baseUrl);
         instance.model = await instance.getModel();
         instance.prompt = await instance.getPrompt();
@@ -114,12 +115,18 @@ export class LLM {
 
     async getPrompt() {
         try {
-            console.log("System message loaded:", systemMessage.substring(0, 100) + "..."); // Log first 100 chars
+            const settings = this.plugin.settings;
+            const promptText = settings.useCustomSystemPrompt && settings.customSystemPrompt
+                ? settings.customSystemPrompt
+                : customSystemMessage;
+
+            console.log("System message loaded:", promptText.substring(0, 100) + "...");
             console.log("Example prompt:", await this.getExamplePrompt().formatMessages({}));
-            const humanMessage = "EXISTING TAGS:\n```\n{inputTags}\n```\n\nDOCUMENT:\n```\n{document}\n```";
+            
+            const humanMessage = "ALLOWED TAGS:\n```\n{inputTags}\n```\n\nDOCUMENT:\n```\n{document}\n```";
             const fewShotPrompt = this.getExamplePrompt();
             const prompt = ChatPromptTemplate.fromMessages([
-                SystemMessagePromptTemplate.fromTemplate(systemMessage),
+                SystemMessagePromptTemplate.fromTemplate(promptText),
                 ...(await fewShotPrompt.formatMessages({})),
                 HumanMessagePromptTemplate.fromTemplate(humanMessage),
             ]);
